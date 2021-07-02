@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Searchbar.module.css';
-import { ReloadOutlined } from '@ant-design/icons';
-import { Input, Button } from 'antd';
+import { Input, Modal } from 'antd';
 import { serverUrl } from '../../constants';
 import axios from 'axios';
 
 const { Search } = Input;
 
 function Searchbar({ setCompanies }) {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
     const handleSearch = async (value) => {
         console.log(
             `${serverUrl}&q={"$or":[{"comercio":{"$regex":"^${value}"}},{"cuit":{"$regex":"^${value}"}},{"id":{"$regex":"^${value}"}}]}`
@@ -15,27 +16,15 @@ function Searchbar({ setCompanies }) {
         const dataSearch = await axios.get(
             `${serverUrl}&q={"$or":[{"comercio":{"$regex":"^${value}"}},{"cuit":{"$regex":"^${value}"}},{"id":{"$regex":"^${value}"}}]}`
         );
-        if (dataSearch.data) {
+        if (dataSearch.data.length > 0) {
             return setCompanies(dataSearch.data);
         }
+        setIsModalVisible(true);
+    };
 
-        return (
-            <div className={styles.notFound}>
-                <p className={styles.notFound__p}>
-                    No se encontraron resultados.
-                </p>
-                <Button
-                    type='primary'
-                    shape='circle'
-                    icon={<ReloadOutlined />}
-                    size='large'
-                    onClick={async () => {
-                        const data = await axios.get(serverUrl);
-                        setCompanies(data);
-                    }}
-                />
-            </div>
-        );
+    const handleOk = () => {
+        setIsModalVisible(false);
+        window.location.reload();
     };
 
     return (
@@ -47,6 +36,9 @@ function Searchbar({ setCompanies }) {
                 enterButton
                 onSearch={handleSearch}
             />
+            <Modal title='Error' visible={isModalVisible} onOk={handleOk}>
+                <p>No se encontraron resultados para su busqueda.</p>
+            </Modal>
         </header>
     );
 }

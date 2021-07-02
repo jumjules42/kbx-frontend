@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pagination, Spin } from 'antd';
+import { Pagination } from 'antd';
 import axios from 'axios';
 import SortAndFilter from './SortAndFilter/SortAndFilter';
 import Searchbar from './Searchbar/Searchbar';
@@ -31,8 +31,6 @@ function App() {
         indexOfFirstCompany,
         indexOfLastCompany
     );
-
-    if (companies.length === 0) return <Spin size='large' />;
 
     return (
         <div className={styles.container}>
