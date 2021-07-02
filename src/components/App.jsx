@@ -38,7 +38,10 @@ function App() {
         <div className={styles.container}>
             <Searchbar />
             <div className={styles.dataContainer}>
-                <SortAndFilter />
+                <SortAndFilter
+                    companies={companies}
+                    setCompanies={setCompanies}
+                />
                 <main className={styles.main}>
                     <table>
                         <thead>

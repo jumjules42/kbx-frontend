@@ -1,40 +1,67 @@
-import React from 'react';
-import { Menu, Dropdown, message } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useState } from 'react';
+import { Menu, Dropdown, message, Radio } from 'antd';
+import {
+    DownOutlined,
+    SortAscendingOutlined,
+    SortDescendingOutlined,
+    ArrowUpOutlined,
+    ArrowDownOutlined,
+} from '@ant-design/icons';
+
+import useSort from '../../hooks/useSort';
 import styles from './SortAndFilter.module.css';
 
-function SortAndFilter() {
-    const onClick = ({ key }) => {
-        message.info(`Click on item ${key}`);
+function SortAndFilter({ companies, setCompanies }) {
+    const [auxCompanies] = useState(companies.map((el) => ({ ...el })));
+
+    const handleSortByActive = (e) => {
+        const value = e.target.value;
+        if (value === 'active') {
+            return setCompanies(auxCompanies.filter((el) => el.activo === 1));
+        }
+        if (value === 'inactive') {
+            return setCompanies(auxCompanies.filter((el) => el.activo === 0));
+        }
     };
 
-    const menu = (
-        <Menu onClick={onClick}>
-            <Menu.Item key='1'>1st menu item</Menu.Item>
-            <Menu.Item key='2'>2nd menu item</Menu.Item>
-            <Menu.Item key='3'>3rd menu item</Menu.Item>
-        </Menu>
-    );
+    const handleSort = (e) => {
+        const value = e.target.value;
+        if (value === 'nameAsc') {
+            setCompanies(useSort(companies, 'comercio', 'asc'));
+        } else if (value === 'cuitAsc') {
+            setCompanies(useSort(companies, 'cuit', 'asc'));
+        } else if (value === 'nameDes') {
+            setCompanies(useSort(companies, 'comercio', 'des'));
+        } else {
+            setCompanies(useSort(companies, 'cuit', 'des'));
+        }
+    };
+
+    const clearFilters = () => {
+        const radios = document.getElementsByName('radio');
+        console.log(radios);
+        radios.forEach((el) => (el.value = ''));
+        setCompanies(auxCompanies);
+    };
 
     return (
         <aside className={styles.aside}>
-            <section>
-                <label htmlFor='active'>Activos</label>
-                <input type='checkbox' name='active' id='active' />
-            </section>
-            <section>
-                <label htmlFor='inactive'>Inactivos</label>
-                <input type='checkbox' name='inactive' id='inactive' />
-            </section>
+            <button onClick={clearFilters} value='none'>
+                Ninguno
+            </button>
 
-            <Dropdown overlay={menu}>
-                <button
-                    className='ant-dropdown-link'
-                    onClick={(e) => e.preventDefault()}
-                >
-                    Hover me, Click menu item <DownOutlined />
-                </button>
-            </Dropdown>
+            <Radio.Group onChange={handleSortByActive} buttonStyle='solid'>
+                <Radio.Button value='active'>Activos</Radio.Button>
+                <Radio.Button value='inactive'>Inactivos</Radio.Button>
+            </Radio.Group>
+
+            <Radio.Group onChange={handleSort} buttonStyle='solid'>
+                <Radio.Button value='nameAsc'>Nombre ascendente</Radio.Button>
+                <Radio.Button value='nameDes'>Nombre descendente</Radio.Button>
+                <Radio.Button value='cuitAsc'>CUIT ascendente</Radio.Button>
+                <Radio.Button value='cuitDes'>CUIT descendente</Radio.Button>
+            </Radio.Group>
         </aside>
     );
 }
