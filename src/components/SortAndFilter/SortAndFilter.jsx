@@ -1,13 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
-import { Menu, Dropdown, message, Radio } from 'antd';
-import {
-    DownOutlined,
-    SortAscendingOutlined,
-    SortDescendingOutlined,
-    ArrowUpOutlined,
-    ArrowDownOutlined,
-} from '@ant-design/icons';
 
 import useSort from '../../hooks/useSort';
 import styles from './SortAndFilter.module.css';
@@ -18,10 +10,10 @@ function SortAndFilter({ companies, setCompanies }) {
     const handleSortByActive = (e) => {
         const value = e.target.value;
         if (value === 'active') {
-            return setCompanies(auxCompanies.filter((el) => el.activo === 1));
+            return setCompanies(auxCompanies.filter((el) => el.activo));
         }
         if (value === 'inactive') {
-            return setCompanies(auxCompanies.filter((el) => el.activo === 0));
+            return setCompanies(auxCompanies.filter((el) => !el.activo));
         }
     };
 
@@ -39,29 +31,98 @@ function SortAndFilter({ companies, setCompanies }) {
     };
 
     const clearFilters = () => {
-        const radios = document.getElementsByName('radio');
-        console.log(radios);
-        radios.forEach((el) => (el.value = ''));
+        const radios = new Set([
+            ...document.getElementsByName('actives'),
+            ...document.getElementsByName('names'),
+        ]);
+
+        radios.forEach((el) => {
+            el.checked = false;
+        });
         setCompanies(auxCompanies);
     };
 
     return (
         <aside className={styles.aside}>
+            <section className={styles.checkbox}>
+                <h3>Filtrar por activos</h3>
+
+                <label className={styles.checkbox__label} htmlFor='active'>
+                    <input
+                        onChange={handleSortByActive}
+                        type='radio'
+                        name='actives'
+                        id='active'
+                        value='active'
+                    />
+                    Activos
+                </label>
+
+                <label className={styles.checkbox__label} htmlFor='inactive'>
+                    <input
+                        onChange={handleSortByActive}
+                        type='radio'
+                        name='actives'
+                        id='inactive'
+                        value='inactive'
+                    />
+                    Inactivos
+                </label>
+            </section>
+
+            <br />
+
+            <section className={styles.checkbox}>
+                <h3>Ordenar por...</h3>
+
+                <label className={styles.checkbox__label} htmlFor='nameAsc'>
+                    <input
+                        onChange={handleSort}
+                        type='radio'
+                        name='names'
+                        id='nameAsc'
+                        value='nameAsc'
+                    />
+                    Nombre ascendente
+                </label>
+
+                <label className={styles.checkbox__label} htmlFor='nameDes'>
+                    <input
+                        onChange={handleSort}
+                        type='radio'
+                        name='names'
+                        id='nameDes'
+                        value='nameDes'
+                    />
+                    Nombre descendente
+                </label>
+
+                <label className={styles.checkbox__label} htmlFor='cuitAsc'>
+                    <input
+                        onChange={handleSort}
+                        type='radio'
+                        name='names'
+                        id='cuitAsc'
+                        value='cuitAsc'
+                    />
+                    CUIT ascendente
+                </label>
+
+                <label className={styles.checkbox__label} htmlFor='cuitDes'>
+                    <input
+                        onChange={handleSort}
+                        type='radio'
+                        name='names'
+                        id='cuitDes'
+                        value='cuitDes'
+                    />
+                    CUIT descendente
+                </label>
+            </section>
+
             <button onClick={clearFilters} value='none'>
-                Ninguno
+                Borrar filtros
             </button>
-
-            <Radio.Group onChange={handleSortByActive} buttonStyle='solid'>
-                <Radio.Button value='active'>Activos</Radio.Button>
-                <Radio.Button value='inactive'>Inactivos</Radio.Button>
-            </Radio.Group>
-
-            <Radio.Group onChange={handleSort} buttonStyle='solid'>
-                <Radio.Button value='nameAsc'>Nombre ascendente</Radio.Button>
-                <Radio.Button value='nameDes'>Nombre descendente</Radio.Button>
-                <Radio.Button value='cuitAsc'>CUIT ascendente</Radio.Button>
-                <Radio.Button value='cuitDes'>CUIT descendente</Radio.Button>
-            </Radio.Group>
         </aside>
     );
 }

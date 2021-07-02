@@ -5,16 +5,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 18px 27px 32px -33px rgba(0,0,0,0.67);
+    box-shadow: 18px 27px 32px -33px rgba(0, 0, 0, 0.67);
 }
 
-.header input {
+.searchbar {
     width: 35%;
-    height: 40px;
-    margin: 0 1rem;
-}
-
-.header button {
-    height: 40px;
-    width: 5%;
 }

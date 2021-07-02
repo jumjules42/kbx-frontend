@@ -36,7 +36,7 @@ function App() {
 
     return (
         <div className={styles.container}>
-            <Searchbar />
+            <Searchbar setCompanies={setCompanies} />
             <div className={styles.dataContainer}>
                 <SortAndFilter
                     companies={companies}
@@ -73,7 +73,7 @@ function App() {
                                     <td>{el.conceptoE}</td>
                                     <td>{el.conceptoF}</td>
                                     <td>{el.balance}</td>
-                                    <td>{el.activo}</td>
+                                    <td>{`${el.activo}`}</td>
                                     <td>{el.ultVenta}</td>
                                 </tr>
                             ))}

@@ -22,6 +22,20 @@ td {
     text-align: center;
 }
 
+.notFound {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 1rem auto;
+}
+
+.notFound__p {
+    text-align: center;
+    opacity: 0.8;
+}
+
 .pagination {
     width: 100%;
     display: flex;
