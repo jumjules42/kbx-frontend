@@ -3,11 +3,9 @@ import styles from './Searchbar.module.css';
 
 function Searchbar() {
     return (
-        <header>
-            <div>
-                <input type='text' />
+        <header className={styles.header}>
+                <input type='text' placeholder='Buscar' />
                 <button>Buscar</button>
-            </div>
         </header>
     );
 }
