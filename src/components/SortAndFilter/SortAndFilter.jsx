@@ -4,17 +4,18 @@ import React, { useState } from 'react';
 import useSort from '../../hooks/useSort';
 import styles from './SortAndFilter.module.css';
 
-function SortAndFilter({ companies, setCompanies }) {
-    const [auxCompanies] = useState(companies.map((el) => ({ ...el })));
+function SortAndFilter({ companies, setCompanies, auxCompanies }) {
+    const [isChecked, setIsChecked] = useState(false);
 
     const handleSortByActive = (e) => {
         const value = e.target.value;
         if (value === 'active') {
-            return setCompanies(auxCompanies.filter((el) => el.activo));
+            setCompanies(auxCompanies.filter((el) => el.activo));
         }
         if (value === 'inactive') {
-            return setCompanies(auxCompanies.filter((el) => !el.activo));
+            setCompanies(auxCompanies.filter((el) => !el.activo));
         }
+        return setIsChecked(true);
     };
 
     const handleSort = (e) => {
@@ -28,6 +29,7 @@ function SortAndFilter({ companies, setCompanies }) {
         } else {
             setCompanies(useSort(companies, 'cuit', 'des'));
         }
+        return setIsChecked(true);
     };
 
     const clearFilters = () => {
@@ -35,11 +37,11 @@ function SortAndFilter({ companies, setCompanies }) {
             ...document.getElementsByName('actives'),
             ...document.getElementsByName('names'),
         ]);
-
         radios.forEach((el) => {
             el.checked = false;
         });
-        setCompanies(auxCompanies);
+        setIsChecked(false);
+        return setCompanies(auxCompanies);
     };
 
     return (
@@ -120,7 +122,12 @@ function SortAndFilter({ companies, setCompanies }) {
                 </label>
             </section>
 
-            <button onClick={clearFilters} value='none'>
+            <button
+                className={styles.clearFilters}
+                onClick={clearFilters}
+                value='none'
+                disabled={!isChecked}
+            >
                 Borrar filtros
             </button>
         </aside>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pagination } from 'antd';
+import { Pagination, Spin } from 'antd';
 import axios from 'axios';
 import SortAndFilter from './SortAndFilter/SortAndFilter';
 import Searchbar from './Searchbar/Searchbar';
@@ -8,12 +8,23 @@ import styles from './App.module.css';
 
 function App() {
     const [companies, setCompanies] = useState([]);
+    const [auxCompanies, setAuxCompanies] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [loading, setLoading] = useState(false);
 
     const getData = async () => {
-        const data = await axios.get(serverUrl);
-        setCompanies(data.data);
+        try {
+            setLoading(true);
+            const data = await axios.get(serverUrl);
+            setCompanies(data.data);
+            setAuxCompanies(data.data);
+            return setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            alert(error);
+            console.log(error);
+        }
     };
 
     useEffect(() => {
@@ -39,8 +50,16 @@ function App() {
                 <SortAndFilter
                     companies={companies}
                     setCompanies={setCompanies}
+                    getData={getData}
+                    auxCompanies={auxCompanies}
                 />
                 <main className={styles.main}>
+                    {loading && (
+                        <div className={styles.spinLoad}>
+                            <h3>La tabla esta cargando...</h3>
+                            <Spin size='large' />
+                        </div>
+                    )}
                     <table>
                         <thead>
                             <tr>

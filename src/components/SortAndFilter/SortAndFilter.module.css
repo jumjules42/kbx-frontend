@@ -19,3 +19,25 @@
 .checkbox__label input {
     margin: 1rem;
 }
+
+.clearFilters {
+    width: 50%;
+    margin: 0 auto;
+    outline: none;
+    background-color: #0074d9;
+    border-radius: 1rem;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid #696969;
+    height: 2.2rem;
+}
+
+.clearFilters:hover {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #86c7ff;
+}
+
+.clearFilters:disabled {
+    background-color: #a1a1a1;
+    cursor: not-allowed;
+}
